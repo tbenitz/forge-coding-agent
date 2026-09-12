@@ -1,0 +1,46 @@
+name: Check DeepSeek key
+
+# This is what "running Node on GitHub" means:
+# GitHub starts a machine, runs Node for a minute, then shuts it off.
+# It is NOT a public website. Use this only to prove the secret works.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Call DeepSeek with the repo secret
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          if [ -z "$DEEPSEEK_API_KEY" ]; then
+            echo "DEEPSEEK_API_KEY secret is empty. Add it under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          node <<'NODE'
+          const key = process.env.DEEPSEEK_API_KEY;
+          const res = await fetch("https://api.deepseek.com/chat/completions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + key
+            },
+            body: JSON.stringify({
+              model: "deepseek-flash",
+              messages: [{ role: "user", content: "Reply with the single word pong." }],
+              max_tokens: 32,
+              thinking: { type: "disabled" }
+            })
+          });
+          const json = await res.json();
+          if (!res.ok) {
+            console.error(json);
+            process.exit(1);
+          }
+          console.log("DeepSeek responded:", json.choices?.[0]?.message?.content || json);
+          NODE

@@ -1,16 +1,50 @@
 # Forge — public DeepSeek coding agent
 
-A site where **visitors** describe what they want and the agent writes or patches code. They do not need a DeepSeek key.
+Visitors describe code. The site writes or patches files. They do not need a DeepSeek key.
 
-The key stays on the server as `DEEPSEEK_API_KEY` (GitHub Actions secret, Vercel env, or local `.env`). The browser only talks to `/api/chat`.
+## You cannot run this site *on* GitHub
 
-## Why not GitHub Pages alone?
+GitHub does two different things people mix up:
 
-GitHub Pages is static. A static page cannot hide an API key. If you put the DeepSeek key in the HTML, every visitor can steal it.
+| Thing | What it actually is | Can visitors use the agent? |
+|---|---|---|
+| **GitHub secret** `DEEPSEEK_API_KEY` | Hidden value stored on the repo | Not by itself |
+| **GitHub Actions + Node** | A throwaway computer that runs a script, then shuts off | No. It is not a website. |
+| **GitHub Pages** | Static files only | No. It cannot hide the key or run `/api/chat`. |
 
-Use Pages only for the UI if you also deploy `/api/chat` somewhere else. Easier: run the included server (or Vercel) so one host serves both.
+Adding the secret was correct. “Doing Node on GitHub” only proves the key works. It does not host the app.
 
-## Local
+The live site has to run on a host that stays online and can keep the key on the server: **Vercel** (easiest), Render, Railway, Fly, or a VPS.
+
+```
+visitor  →  your live URL /api/chat  →  DeepSeek
+                    ↑
+            DEEPSEEK_API_KEY on that host
+```
+
+## Fastest way to put it online (no Node on your laptop)
+
+1. Open [vercel.com](https://vercel.com) and sign in with GitHub.
+2. **Add New → Project → Import** `tbenitz/forge-coding-agent`.
+3. In the project: **Settings → Environment Variables**
+   - Name: `DEEPSEEK_API_KEY`
+   - Value: the same DeepSeek key you put in GitHub Secrets
+   - Environment: Production (and Preview if you want)
+4. Deploy.
+
+Vercel runs `api/chat.js` as the Node backend. Visitors open the Vercel URL and generate code. Your key never goes to the browser.
+
+The GitHub secret is **not copied to Vercel automatically**. Paste it once in Vercel too.
+
+## Prove the GitHub secret works (this *is* Node on GitHub)
+
+1. Repo → **Actions**
+2. Workflow **Check DeepSeek key**
+3. **Run workflow**
+
+That job starts Node on a GitHub machine, calls DeepSeek with `${{ secrets.DEEPSEEK_API_KEY }}`, prints a short reply, and exits. That is all GitHub Actions can do with Node.
+
+## Run on your own computer (optional)
 
 ```bash
 export DEEPSEEK_API_KEY=sk-...
@@ -19,30 +53,10 @@ node server.mjs
 
 Open http://localhost:8787
 
-## GitHub secret (you add this — tools cannot write secret values)
+## Files
 
-1. Repo → **Settings → Secrets and variables → Actions → New repository secret**
-2. Name: `DEEPSEEK_API_KEY`
-3. Value: your DeepSeek key from https://platform.deepseek.com
-
-CLI:
-
-```bash
-gh secret set DEEPSEEK_API_KEY --repo tbenitz/forge-coding-agent
-```
-
-That secret is for deploy/CI. Visitors still never see it.
-
-## Vercel
-
-- Import this repo
-- Add env var `DEEPSEEK_API_KEY`
-- Deploy. `api/chat.js` becomes `https://your-app.vercel.app/api/chat`
-
-## What visitors get
-
-- Chat agent that writes full files or edits one section
-- File tree, Monaco editor, copy, export zip
-- Website preview opens in a **new tab**
-- Snippet / JS checks run in the same tab
-- Collapsible files, agent, and top menus
+- `index.html` — visitor UI (upload this file to the repo if it is missing)
+- `api/chat.js` — Vercel/serverless proxy
+- `server.mjs` — local Node server
+- `.github/workflows/check-key.yml` — secret smoke test
+- `.github/workflows/deploy-vercel.yml` — optional deploy if you add Vercel tokens
