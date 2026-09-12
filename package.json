@@ -1,0 +1,8 @@
+{
+  "name": "forge-coding-agent",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  }
+}
