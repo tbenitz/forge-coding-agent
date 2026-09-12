@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DuckHunter FPS</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="game">
+  <canvas id="scene"></canvas>
+  <div id="crosshair"></div>
+  <div id="hud">
+    <div class="hud-item">SCORE <span id="score">0</span></div>
+    <div class="hud-item">AMMO <span id="ammo">6</span></div>
+    <div class="hud-item">TIME <span id="time">60</span></div>
+    <div class="hud-item">WAVE <span id="wave">1</span></div>
+  </div>
+  <div id="reload-bar"><div id="reload-fill"></div></div>
+  <div id="hitmarker">✕</div>
+  <div id="overlay">
+    <h1>DUCKHUNTER</h1>
+    <p>Point and click to shoot the ducks. Reload with <b>R</b> or right-click. Don't let them escape!</p>
+    <button id="startBtn">START HUNT</button>
+  </div>
+  <div id="gameover" class="hidden">
+    <h1>HUNT OVER</h1>
+    <p>Final Score: <span id="finalScore">0</span></p>
+    <p>Ducks Bagged: <span id="finalKills">0</span></p>
+    <button id="restartBtn">HUNT AGAIN</button>
+  </div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>

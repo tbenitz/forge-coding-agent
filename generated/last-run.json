@@ -1,0 +1,11 @@
+{
+  "idea": "duckhunter fps point and click game",
+  "codeType": "website",
+  "model": "deepseek-flash",
+  "files": [
+    "index.html",
+    "style.css",
+    "game.js"
+  ],
+  "createdAt": "2026-09-12T12:43:27.644Z"
+}
