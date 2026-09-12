@@ -1,0 +1,23 @@
+name: Keep Hugging Face API awake
+
+# Pings the Space so free CPU Basic is less likely to sleep after 48h idle.
+# Add repo secret HF_SPACE_URL = https://USERNAME-forge-chat-proxy.hf.space/health
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake Space
+        env:
+          SPACE_URL: ${{ secrets.HF_SPACE_URL }}
+        run: |
+          if [ -z "$SPACE_URL" ]; then
+            echo "Add repo secret HF_SPACE_URL like https://YOURNAME-forge-chat-proxy.hf.space/health"
+            exit 0
+          fi
+          curl -fsS --max-time 60 "$SPACE_URL" || curl -fsS --max-time 120 "$SPACE_URL"
