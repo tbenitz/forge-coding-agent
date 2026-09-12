@@ -1,0 +1,31 @@
+name: Generate code
+description: Ask Forge to write code. GitHub Actions uses the repo DeepSeek secret.
+title: "[generate] "
+labels: [generate]
+body:
+  - type: markdown
+    attributes:
+      value: "Describe what you want built. A GitHub Action will run DeepSeek with the repo secret and comment the files on this issue."
+  - type: dropdown
+    id: code_type
+    attributes:
+      label: Code type
+      options:
+        - website
+        - python
+        - javascript
+        - react
+        - typescript
+        - node
+        - any
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: What should it write?
+      description: Be specific. Example — a Denver coffee shop landing page with index.html, styles.css, and app.js
+      placeholder: Build...
+    validations:
+      required: true

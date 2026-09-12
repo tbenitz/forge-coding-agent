@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forge — GitHub coding agent</title>
+  <style>
+    :root { --bg:#0e1114; --panel:#161b20; --line:#2a333c; --text:#e7edf2; --muted:#8b99a6; --accent:#d4a017; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:16px/1.5 system-ui, sans-serif; background:var(--bg); color:var(--text); }
+    main { max-width:720px; margin:0 auto; padding:48px 20px; }
+    h1 { font-size:32px; margin:0 0 8px; }
+    h1 span { color:var(--accent); }
+    p { color:var(--muted); }
+    a.btn { display:inline-block; background:var(--accent); color:#1a1404; font-weight:700; text-decoration:none; padding:12px 16px; border-radius:8px; margin:8px 8px 0 0; }
+    a.secondary { background:#1c2329; color:var(--text); border:1px solid var(--line); }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px; margin-top:28px; }
+    code { color:#f0d78c; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Forge <span>Agent</span></h1>
+    <p>This site stays on GitHub. A request runs as a GitHub Action. DeepSeek is called with the repo secret <code>DEEPSEEK_API_KEY</code>. The key is never put in this page.</p>
+    <p>
+      <a class="btn" href="https://github.com/tbenitz/forge-coding-agent/issues/new?template=generate.yml">Generate code</a>
+      <a class="btn secondary" href="https://github.com/tbenitz/forge-coding-agent/actions/workflows/generate.yml">Owner: Run workflow</a>
+      <a class="btn secondary" href="https://github.com/tbenitz/forge-coding-agent/tree/main/generated/latest">Latest files</a>
+    </p>
+    <div class="card">
+      <strong>How it works</strong>
+      <p>1. Click Generate code and describe what you want.<br>
+         2. GitHub opens an issue.<br>
+         3. Actions uses the secret, calls DeepSeek, commits files under <code>generated/latest</code>, and comments the code on the issue.</p>
+    </div>
+  </main>
+</body>
+</html>
